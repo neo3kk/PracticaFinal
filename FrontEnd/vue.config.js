@@ -1,7 +1,9 @@
+/* eslint-disable */
 const path = require('path')
 
 module.exports = {
   chainWebpack: config => {
+    config.module.rules.delete('eslint');
     const apiClient = process.env.VUE_APP_API_CLIENT // mock or server
     config.resolve.alias.set(
       'api-client',
