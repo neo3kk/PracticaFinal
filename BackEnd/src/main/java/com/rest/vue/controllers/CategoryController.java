@@ -7,6 +7,7 @@ import com.rest.vue.entities.Topic;
 import com.rest.vue.repos.CategoryRepository;
 import com.rest.vue.repos.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +36,7 @@ public class CategoryController {
     }
 
 
-   @GetMapping("categories/{slug}")
+    @GetMapping("categories/{slug}")
     public ResponseEntity<String> getCategory(@PathVariable String slug) {
         Category category = categoryRepository.findCategoryBySlug(slug);
         return new ResponseEntity<>(gson.toJson(category), HttpStatus.OK);
@@ -45,6 +46,12 @@ public class CategoryController {
     public ResponseEntity<String> getTopics(@PathVariable String slug) {
         List<Topic> list = topicRepository.findTopicsByCategory(slug);
         return new ResponseEntity<>(gson.toJson(list), HttpStatus.OK);
+    }
+
+    @GetMapping("topics/{topic}")
+    public ResponseEntity<String> getReplies(@PathVariable Integer topic) {
+        Topic topic1 = topicRepository.findById(topic).get();
+        return new ResponseEntity<>(gson.toJson(topic1), HttpStatus.OK);
     }
 
 

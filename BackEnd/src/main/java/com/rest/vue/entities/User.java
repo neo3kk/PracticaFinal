@@ -1,5 +1,6 @@
 package com.rest.vue.entities;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.List;
@@ -7,12 +8,15 @@ import java.util.List;
 
 @Table("category")
 public class User {
+    @Id
+    int _id;
+
     String email;
     String password;
     String name;
     String avatar;
     String role;
-    List<String> rolePermissions;
+    String rolePermissions;
 
     public String getEmail() {
         return email;
@@ -54,11 +58,19 @@ public class User {
         this.role = role;
     }
 
-    public List<String> getRolePermissions() {
+    public String getRolePermissions() {
         return rolePermissions;
     }
 
-    public void setRolePermissions(List<String> rolePermissions) {
+    public void setRolePermissions(String rolePermissions) {
         this.rolePermissions = rolePermissions;
+    }
+
+    public int get_id() {
+        return _id;
+    }
+
+    public void set_id(int _id) {
+        this._id = _id;
     }
 }

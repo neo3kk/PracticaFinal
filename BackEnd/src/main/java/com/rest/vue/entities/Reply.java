@@ -6,26 +6,17 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.util.Date;
 
 
-@Table("topic")
-public class Topic {
+@Table("reply")
+public class Reply {
+
     @Id
     int _id;
 
-    String title;
     String content;
-    Number views;
     Date createdAt;
     Date updatedAt;
-    String category;
-    String user;
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    String topic;
+    User user;
 
     public String getContent() {
         return content;
@@ -33,14 +24,6 @@ public class Topic {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public Number getViews() {
-        return views;
-    }
-
-    public void setViews(Number views) {
-        this.views = views;
     }
 
     public Date getCreatedAt() {
@@ -59,19 +42,19 @@ public class Topic {
         this.updatedAt = updatedAt;
     }
 
-    public String getCategory() {
-        return category;
+    public String getTopic() {
+        return topic;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 
-    public String getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
