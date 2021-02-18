@@ -8,6 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 
+
 public interface TopicRepository extends CrudRepository<Topic, Integer> {
     List<Topic> findTopicsByCategory(String category);
 }

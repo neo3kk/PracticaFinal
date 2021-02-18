@@ -6,7 +6,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.util.List;
 
 
-@Table("category")
+@Table("user")
 public class User {
     @Id
     int _id;
@@ -16,7 +16,14 @@ public class User {
     String name;
     String avatar;
     String role;
-    String rolePermissions;
+
+    public int get_id() {
+        return _id;
+    }
+
+    public void set_id(int _id) {
+        this._id = _id;
+    }
 
     public String getEmail() {
         return email;
@@ -58,19 +65,15 @@ public class User {
         this.role = role;
     }
 
-    public String getRolePermissions() {
-        return rolePermissions;
-    }
-
-    public void setRolePermissions(String rolePermissions) {
-        this.rolePermissions = rolePermissions;
-    }
-
-    public int get_id() {
-        return _id;
-    }
-
-    public void set_id(int _id) {
-        this._id = _id;
+    @Override
+    public String toString() {
+        return "User{" +
+                "_id=" + _id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", role='" + role + '\'' +
+                '}';
     }
 }

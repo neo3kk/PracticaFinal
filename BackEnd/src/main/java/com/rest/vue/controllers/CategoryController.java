@@ -2,10 +2,13 @@ package com.rest.vue.controllers;
 
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.rest.vue.entities.Category;
 import com.rest.vue.entities.Topic;
+import com.rest.vue.entities.User;
 import com.rest.vue.repos.CategoryRepository;
 import com.rest.vue.repos.TopicRepository;
+import com.rest.vue.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.HttpStatus;
@@ -26,6 +29,9 @@ public class CategoryController {
 
     @Autowired
     TopicRepository topicRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
 
     @GetMapping("/categories")
@@ -51,6 +57,9 @@ public class CategoryController {
     @GetMapping("topics/{topic}")
     public ResponseEntity<String> getReplies(@PathVariable Integer topic) {
         Topic topic1 = topicRepository.findById(topic).get();
+        System.out.println("USUARI: "+ topic1.getUser());
+        User userTopic = userRepository.findUserByName(topic1.getUser());
+        topic1.setUser(gson.toJson(userTopic));
         return new ResponseEntity<>(gson.toJson(topic1), HttpStatus.OK);
     }
 
