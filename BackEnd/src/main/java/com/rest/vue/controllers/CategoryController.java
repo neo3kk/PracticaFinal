@@ -11,6 +11,7 @@ import com.rest.vue.repos.CategoryRepository;
 import com.rest.vue.repos.TopicRepository;
 import com.rest.vue.repos.UserRepository;
 import com.rest.vue.service.CategoryService;
+import com.rest.vue.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.HttpStatus;
@@ -27,17 +28,10 @@ public class CategoryController {
     Gson gson = new Gson();
 
     @Autowired
-    CategoryRepository categoryRepository;
-
-    @Autowired
-    TopicRepository topicRepository;
-
-    @Autowired
-    UserRepository userRepository;
-
-
-    @Autowired
     CategoryService categoryService;
+
+    @Autowired
+    TopicService topicService;
 
 
     @GetMapping("/categories")
@@ -49,43 +43,22 @@ public class CategoryController {
 
     @GetMapping("categories/{slug}")
     public ResponseEntity<String> getCategory(@PathVariable String slug) {
-        Category category = categoryRepository.findCategoryBySlug(slug);
+        Category category = categoryService.findBySlug(slug);
         return new ResponseEntity<>(gson.toJson(category), HttpStatus.OK);
     }
 
     @GetMapping("categories/{slug}/topics")
     public ResponseEntity<String> getTopics(@PathVariable String slug) {
-        List<Topic> list = topicRepository.findTopicsByCategory(slug);
-        List<TopicDTO> listDTO = new ArrayList<>();
-        list.forEach(topic->{
-            User userTopic = userRepository.findUserByName(topic.getUser());
-            TopicDTO topicDTO = new TopicDTO();
-            topicDTO.set_id(topic.get_id());
-            topicDTO.setCategory(topic.getCategory());
-            topicDTO.setContent(topic.getContent());
-            topicDTO.setCreatedAt(topic.getCreatedAt());
-            topicDTO.setUpdatedAt(topic.getUpdatedAt());
-            topicDTO.setViews(topic.getViews());
-            topicDTO.setUser(userTopic);
-            listDTO.add(topicDTO);
-        });
-
+        List<Topic> list = topicService.findTopicsByCategory(slug);
+        List<TopicDTO> listDTO = topicService.createListTopicDTO(list);
         return new ResponseEntity<>(gson.toJson(listDTO), HttpStatus.OK);
     }
 
     @GetMapping("topics/{topicParam}")
     public ResponseEntity<String> getReplies(@PathVariable Integer topicParam) {
-        Topic topic = topicRepository.findById(topicParam).get();
-        User userTopic = userRepository.findUserByName(topic.getUser());
-        TopicDTO topicDTO = new TopicDTO();
-        topicDTO.set_id(topic.get_id());
-        topicDTO.setCategory(topic.getCategory());
-        topicDTO.setContent(topic.getContent());
-        topicDTO.setCreatedAt(topic.getCreatedAt());
-        topicDTO.setUpdatedAt(topic.getUpdatedAt());
-        topicDTO.setViews(topic.getViews());
-        topicDTO.setUser(userTopic);
 
+        Topic topic = topicService.findById(topicParam);
+        TopicDTO topicDTO = topicService.makeTopicDTO(topic);
         return new ResponseEntity<>(gson.toJson(topicDTO), HttpStatus.OK);
     }
 

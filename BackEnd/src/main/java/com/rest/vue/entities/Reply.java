@@ -16,7 +16,15 @@ public class Reply {
     Date createdAt;
     Date updatedAt;
     String topic;
-    User user;
+    String user;
+
+    public int get_id() {
+        return _id;
+    }
+
+    public void set_id(int _id) {
+        this._id = _id;
+    }
 
     public String getContent() {
         return content;
@@ -50,19 +58,11 @@ public class Reply {
         this.topic = topic;
     }
 
-    public User getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(String user) {
         this.user = user;
-    }
-
-    public int get_id() {
-        return _id;
-    }
-
-    public void set_id(int _id) {
-        this._id = _id;
     }
 }

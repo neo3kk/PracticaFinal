@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.Date;
+import java.util.List;
 
 
 public class TopicDTO {
@@ -16,6 +17,8 @@ public class TopicDTO {
     Date createdAt;
     Date updatedAt;
     String category;
+    Integer numberOfReplies;
+    List<Reply> replies;
     User user;
 
     public int get_id() {
@@ -74,11 +77,27 @@ public class TopicDTO {
         this.category = category;
     }
 
+    public Integer getNumberOfReplies() {
+        return numberOfReplies;
+    }
+
+    public void setNumberOfReplies(Integer numberOfReplies) {
+        this.numberOfReplies = numberOfReplies;
+    }
+
     public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<Reply> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<Reply> replies) {
+        this.replies = replies;
     }
 }

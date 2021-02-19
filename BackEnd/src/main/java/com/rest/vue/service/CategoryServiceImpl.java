@@ -21,4 +21,10 @@ public class CategoryServiceImpl implements CategoryService{
         categoryRepository.findAll().forEach(c -> list.add(c));
         return list;
     }
+
+    @Override
+    public Category findBySlug(String slug) {
+        Category category = categoryRepository.findCategoryBySlug(slug);
+        return category;
+    }
 }

@@ -8,4 +8,5 @@ public interface CategoryService {
 
     List<Category> findAll();
 
+    Category findBySlug(String slug);
 }

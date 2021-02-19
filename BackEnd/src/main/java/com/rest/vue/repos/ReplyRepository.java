@@ -10,5 +10,7 @@ import java.util.List;
 
 public interface ReplyRepository extends CrudRepository<Reply, Integer> {
     List<Reply> findRepliesByTopic(String topic);
+
+    List<Reply> findRepliesByTopicAndUser(String topic, String user);
 }
 
