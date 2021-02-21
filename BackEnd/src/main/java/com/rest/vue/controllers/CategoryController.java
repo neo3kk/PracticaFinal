@@ -3,19 +3,18 @@ package com.rest.vue.controllers;
 
 import com.google.gson.Gson;
 import com.rest.vue.entities.*;
-import com.rest.vue.repos.UserRepository;
 import com.rest.vue.service.CategoryService;
 import com.rest.vue.service.TokenService;
 import com.rest.vue.service.TopicService;
+import com.rest.vue.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +33,7 @@ public class CategoryController {
     TokenService tokenService;
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
 
     @GetMapping("/categories")
@@ -71,26 +70,41 @@ public class CategoryController {
         String header = request.getHeader("authorization");
         String token = header.replace("Bearer ", "");
         String email = tokenService.getSubject(token);
-        User user = userRepository.findUserByemail(email);
-        UserDTO userDTO = makeUserDTO(user);
+        User user = userService.findUserByemail(email);
+        UserDTO userDTO = userService.makeUserDTO(user);
         return new ResponseEntity<>(gson.toJson(userDTO), HttpStatus.OK);
     }
 
+    @PostMapping("/topics")
+    public ResponseEntity<String> login(@RequestBody String payload, HttpServletRequest request) {
+        Map<String, String> map = gson.fromJson(payload, HashMap.class);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
 
-    public UserDTO makeUserDTO(User user) {
-        UserDTO userDTO = new UserDTO();
-        String[] string = new String[]{"own_topics:write", "own_topics:delete", "own_replies:write", "own_replies:delete"};
-        Map<String, Object> permissions = new HashMap<>();
-        permissions.put("root", string);
-        permissions.put("categories", new ArrayList<>());
-        userDTO.set_id(user.get_id());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setName(user.getName());
-        userDTO.setRole(user.getRole());
-        userDTO.setPassword(user.getPassword());
-        userDTO.setAvatar(user.getAvatar());
-        userDTO.setPermissions(permissions);
-        return userDTO;
+        Integer random  = categoryService.randomId();
+
+        String header = request.getHeader("authorization");
+        String token = header.replace("Bearer ", "");
+        String email = tokenService.getSubject(token);
+        User user = userService.findUserByemail(email);
+        Topic topic = new Topic();
+        topic.set_id(random);
+        topic.setTitle(map.get("title"));
+        topic.setContent(map.get("content"));
+        topic.setUser(user.getName());
+        topic.setCategory(map.get("category"));
+        topic.setCreated_at(dateFormat.format(date));
+        topic.setUpdated_at(dateFormat.format(date));
+        topic.setViews(0);
+        topic.setNumber_of_replies(0);
+
+        if(topicService.createTopic(topic)){
+            TopicDTO topicDTO = topicService.makeTopicDTO(topic);
+            return new ResponseEntity<>(gson.toJson(topicDTO), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+
     }
 
 

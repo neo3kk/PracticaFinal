@@ -48,8 +48,8 @@ public class TopicServiceImpl implements TopicService {
         topicDTO.set_id(topic.get_id());
         topicDTO.setCategory(topic.getCategory());
         topicDTO.setContent(topic.getContent());
-        topicDTO.setCreatedAt(topic.getCreatedAt());
-        topicDTO.setUpdatedAt(topic.getUpdatedAt());
+        topicDTO.setCreatedAt(topic.getCreated_at());
+        topicDTO.setUpdatedAt(topic.getUpdated_at());
         topicDTO.setViews(topic.getViews());
         topicDTO.setUser(userTopic);
         List<Reply> replies = replyRepository.findRepliesByTopicAndUser(topic.getTitle(), userTopic.getName());
@@ -60,7 +60,23 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public Topic findById(Integer topicParam) {
-        Topic topic = topicRepository.findById(topicParam).get();
+        Topic topic = topicRepository.findTopicBy_id(topicParam);
         return topic;
+    }
+
+    @Override
+    public boolean createTopic(Topic topic) {
+        if (topicRepository.findTopicsBy_id(topic.get_id()) == null) {
+            try {
+                topicRepository.save(topic);
+                return true;
+            } catch (Exception e) {
+                System.out.println("HA FALLAT INSERT");
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }

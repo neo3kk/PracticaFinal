@@ -15,4 +15,6 @@ public interface TopicService {
     TopicDTO makeTopicDTO(Topic topic);
 
     Topic findById(Integer topicParam);
+
+    boolean createTopic(Topic topic);
 }

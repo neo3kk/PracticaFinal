@@ -16,6 +16,7 @@ public class User {
     String name;
     String avatar;
     String role;
+    String role_permissions;
 
     public int get_id() {
         return _id;
@@ -65,6 +66,14 @@ public class User {
         this.role = role;
     }
 
+    public String getRole_permissions() {
+        return role_permissions;
+    }
+
+    public void setRole_permissions(String role_permissions) {
+        this.role_permissions = role_permissions;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -74,6 +83,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", avatar='" + avatar + '\'' +
                 ", role='" + role + '\'' +
+                ", role_permissions='" + role_permissions + '\'' +
                 '}';
     }
 }

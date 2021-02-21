@@ -3,21 +3,37 @@ package com.rest.vue.entities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.util.Date;
-
 
 @Table("topic")
 public class Topic {
     @Id
-    int _id;
+    int id;
 
+    Integer _id;
     String title;
     String content;
     Number views;
-    Date createdAt;
-    Date updatedAt;
+    String created_at;
+    String updated_at;
     String category;
     String user;
+    Integer number_of_replies;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Integer get_id() {
+        return _id;
+    }
+
+    public void set_id(Integer _id) {
+        this._id = _id;
+    }
 
     public String getTitle() {
         return title;
@@ -43,20 +59,20 @@ public class Topic {
         this.views = views;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public String getCreated_at() {
+        return created_at;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public String getUpdated_at() {
+        return updated_at;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setUpdated_at(String updated_at) {
+        this.updated_at = updated_at;
     }
 
     public String getCategory() {
@@ -75,12 +91,11 @@ public class Topic {
         this.user = user;
     }
 
-    public int get_id() {
-        return _id;
+    public Integer getNumber_of_replies() {
+        return number_of_replies;
     }
 
-    public void set_id(int _id) {
-        this._id = _id;
+    public void setNumber_of_replies(Integer number_of_replies) {
+        this.number_of_replies = number_of_replies;
     }
-
 }

@@ -11,5 +11,7 @@ import java.util.List;
 
 public interface TopicRepository extends CrudRepository<Topic, Integer> {
     List<Topic> findTopicsByCategory(String category);
+    Boolean findTopicsBy_id(Integer id);
+    Topic findTopicBy_id(Integer id);
 }
 

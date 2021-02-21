@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class CategoryServiceImpl implements CategoryService{
@@ -26,5 +27,12 @@ public class CategoryServiceImpl implements CategoryService{
     public Category findBySlug(String slug) {
         Category category = categoryRepository.findCategoryBySlug(slug);
         return category;
+    }
+
+    @Override
+    public Integer randomId() {
+        Random rand = new Random();
+        int random = rand.nextInt(1000000000);
+        return random;
     }
 }
