@@ -1,29 +1,42 @@
 package com.rest.vue.entities;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
 
-import java.util.Date;
+import javax.persistence.*;
 
+import java.util.Objects;
 
-@Table("reply")
+@Entity
+@Table(name = "reply")
 public class Reply {
 
     @Id
-    int _id;
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
+    @Column(name ="content", columnDefinition = "TEXT")
     String content;
-    Date createdAt;
-    Date updatedAt;
-    String topic;
-    String user;
 
-    public int get_id() {
-        return _id;
+    @Column(name ="created_at", columnDefinition = "TEXT")
+    String created_at;
+
+    @Column(name ="updated_at", columnDefinition = "TEXT")
+    String updated_at;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "replyTopic_id"), name = "replyTopic_id")
+    Topic topic;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "replyUser_id"), name = "replyUser_id")
+    User user;
+
+    public Long getId() {
+        return id;
     }
 
-    public void set_id(int _id) {
-        this._id = _id;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getContent() {
@@ -34,35 +47,53 @@ public class Reply {
         this.content = content;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public String getCreated_at() {
+        return created_at;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public String getUpdated_at() {
+        return updated_at;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setUpdated_at(String updated_at) {
+        this.updated_at = updated_at;
     }
 
-    public String getTopic() {
+    public Topic getTopic() {
         return topic;
     }
 
-    public void setTopic(String topic) {
+    public void setTopic(Topic topic) {
         this.topic = topic;
     }
 
-    public String getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Reply reply = (Reply) o;
+        return Objects.equals(id, reply.id) &&
+                Objects.equals(content, reply.content) &&
+                Objects.equals(created_at, reply.created_at) &&
+                Objects.equals(updated_at, reply.updated_at) &&
+                Objects.equals(topic, reply.topic) &&
+                Objects.equals(user, reply.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, content, created_at, updated_at, topic, user);
     }
 }

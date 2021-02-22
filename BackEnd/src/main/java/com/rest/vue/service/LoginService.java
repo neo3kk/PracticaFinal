@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class LoginService {
-    @Autowired
+   @Autowired
     UserRepository userRepository;
 
     public boolean checkUserAndPassword(String username, String password) {

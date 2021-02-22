@@ -3,14 +3,15 @@ package com.rest.vue.repos;
 
 import com.rest.vue.entities.Reply;
 import com.rest.vue.entities.Topic;
-import org.springframework.data.repository.CrudRepository;
+import com.rest.vue.entities.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 
-public interface ReplyRepository extends CrudRepository<Reply, Integer> {
+public interface ReplyRepository extends JpaRepository<Reply, Long> {
     List<Reply> findRepliesByTopic(String topic);
 
-    List<Reply> findRepliesByTopicAndUser(String topic, String user);
+    List<Reply> findRepliesByTopicAndUser(Topic topic, User user);
 }
 

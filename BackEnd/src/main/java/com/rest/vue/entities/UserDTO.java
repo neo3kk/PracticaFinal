@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class UserDTO {
 
-    int _id;
+    Long _id;
 
     String email;
     String password;
@@ -18,11 +18,11 @@ public class UserDTO {
     String role;
     Map<String, Object> permissions;
 
-    public int get_id() {
+    public Long get_id() {
         return _id;
     }
 
-    public void set_id(int _id) {
+    public void set_id(Long _id) {
         this._id = _id;
     }
 

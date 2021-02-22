@@ -20,15 +20,14 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
 
-
     @Override
     public UserDTO makeUserDTO(User user) {
         UserDTO userDTO = new UserDTO();
-        String[] string = new String[]{"own_topics:write", "own_topics:delete", "own_replies:write", "own_replies:delete"};
+        String[] string = new String[]{"own_topics:write", "own_topics:delete", "own_replies:write", "own_replies:delete", "categories:write", "categories:delete"};
         Map<String, Object> permissions = new HashMap<>();
         permissions.put("root", string);
         permissions.put("categories", new ArrayList<>());
-        userDTO.set_id(user.get_id());
+        userDTO.set_id(user.getId());
         userDTO.setEmail(user.getEmail());
         userDTO.setName(user.getName());
         userDTO.setRole(user.getRole());

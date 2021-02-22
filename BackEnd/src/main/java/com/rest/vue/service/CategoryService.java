@@ -1,9 +1,9 @@
 package com.rest.vue.service;
 
 import com.rest.vue.entities.Category;
+import com.rest.vue.entities.CategoryDTO;
 
 import java.util.List;
-import java.util.Random;
 
 public interface CategoryService {
 
@@ -12,4 +12,14 @@ public interface CategoryService {
     Category findBySlug(String slug);
 
     Integer randomId();
+
+    Category findCategory(String category);
+
+    String randomColor();
+
+    Category createCategory(Category category);
+
+    CategoryDTO makeCategoryDTO(Category category);
+
+    List<CategoryDTO> createListCategoryDTO(List<Category> list);
 }

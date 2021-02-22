@@ -2,10 +2,10 @@ package com.rest.vue.repos;
 
 
 import com.rest.vue.entities.User;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface UserRepository extends CrudRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     User findUserByEmailAndPassword(String name, String pass);
 

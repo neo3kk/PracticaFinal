@@ -1,9 +1,7 @@
 package com.rest.vue.service;
 
-import com.rest.vue.entities.Reply;
-import com.rest.vue.entities.Topic;
-import com.rest.vue.entities.TopicDTO;
-import com.rest.vue.entities.User;
+import com.rest.vue.entities.*;
+import com.rest.vue.repos.CategoryRepository;
 import com.rest.vue.repos.ReplyRepository;
 import com.rest.vue.repos.TopicRepository;
 import com.rest.vue.repos.UserRepository;
@@ -18,23 +16,32 @@ public class TopicServiceImpl implements TopicService {
 
     @Autowired
     TopicRepository topicRepository;
-    
+
     @Autowired
     UserRepository userRepository;
 
     @Autowired
     ReplyRepository replyRepository;
 
+    @Autowired
+    CategoryRepository categoryRepository;
+
+    @Autowired
+    UserService userService;
+
     @Override
     public List<Topic> findTopicsByCategory(String slug) {
-        List<Topic> list = topicRepository.findTopicsByCategory(slug);
+        Category category = categoryRepository.findCategoryBySlug(slug);
+        List<Topic> list = topicRepository.findTopicByCategory(category);
         return list;
     }
 
     @Override
     public List<TopicDTO> createListTopicDTO(List<Topic> list) {
+        System.out.println("CREATE LIST DTO's");
         List<TopicDTO> listDTO = new ArrayList<>();
-        list.forEach(topic->{
+        list.forEach(topic -> {
+            System.out.println("CREATE LIST DTO's");
             TopicDTO topicDTO = makeTopicDTO(topic);
             listDTO.add(topicDTO);
         });
@@ -43,30 +50,34 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public TopicDTO makeTopicDTO(Topic topic) {
-        User userTopic = userRepository.findUserByName(topic.getUser());
+        User userTopic = userRepository.findById(topic.getUser().getId()).get();
         TopicDTO topicDTO = new TopicDTO();
-        topicDTO.set_id(topic.get_id());
-        topicDTO.setCategory(topic.getCategory());
+        topicDTO.set_id(topic.getId());
+        topicDTO.setId(topic.getId());
+        topicDTO.setTitle(topic.getTitle());
+        topicDTO.setCategory(topic.getCategory().getTitle());
         topicDTO.setContent(topic.getContent());
         topicDTO.setCreatedAt(topic.getCreated_at());
         topicDTO.setUpdatedAt(topic.getUpdated_at());
         topicDTO.setViews(topic.getViews());
-        topicDTO.setUser(userTopic);
-        List<Reply> replies = replyRepository.findRepliesByTopicAndUser(topic.getTitle(), userTopic.getName());
-        topicDTO.setReplies(replies);
-        topicDTO.setNumberOfReplies(replies.size());
-    return topicDTO;
+        UserDTO user = userService.makeUserDTO(userTopic);
+        topicDTO.setUser(user);
+        topicDTO.setReplies(null);
+        topicDTO.setNumberOfReplies(topic.getNumber_of_replies());
+        System.out.println(topicDTO.toString());
+        return topicDTO;
     }
 
+
     @Override
-    public Topic findById(Integer topicParam) {
-        Topic topic = topicRepository.findTopicBy_id(topicParam);
+    public Topic findById(Long topicParam) {
+        Topic topic = topicRepository.findTopicByid(topicParam);
         return topic;
     }
 
     @Override
     public boolean createTopic(Topic topic) {
-        if (topicRepository.findTopicsBy_id(topic.get_id()) == null) {
+        if (topicRepository.findTopicsByid(topic.getId()) == null) {
             try {
                 topicRepository.save(topic);
                 return true;
@@ -78,5 +89,11 @@ public class TopicServiceImpl implements TopicService {
         } else {
             return false;
         }
+    }
+    @Override
+    public boolean updateTopic(Topic topic) {
+
+        topicRepository.save(topic);
+        return true;
     }
 }

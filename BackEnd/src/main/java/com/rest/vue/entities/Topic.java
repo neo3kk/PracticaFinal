@@ -1,38 +1,60 @@
 package com.rest.vue.entities;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-@Table("topic")
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.*;
+import java.util.List;
+import java.util.Objects;
+
+@Entity
+@Table(name = "topic")
 public class Topic {
     @Id
-    int id;
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
-    Integer _id;
+    @Column(name = "title", columnDefinition = "TEXT")
     String title;
+
+    @Column(name = "content", columnDefinition = "TEXT")
     String content;
-    Number views;
+
+    @Column(name = "views")
+    Integer views;
+
+    @Column(name = "created_at", columnDefinition = "TEXT")
     String created_at;
+
+    @Column(name = "updated_at", columnDefinition = "TEXT")
     String updated_at;
-    String category;
-    String user;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "topicCategory_id"), name = "topicCategory_id")
+    Category category;
+
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    List<Reply> replies;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "topicUser_id"), name = "topicUser_id")
+    User user;
+
+    @Column(name = "number_of_replies")
     Integer number_of_replies;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
-    }
-
-    public Integer get_id() {
-        return _id;
-    }
-
-    public void set_id(Integer _id) {
-        this._id = _id;
     }
 
     public String getTitle() {
@@ -51,11 +73,11 @@ public class Topic {
         this.content = content;
     }
 
-    public Number getViews() {
+    public Integer getViews() {
         return views;
     }
 
-    public void setViews(Number views) {
+    public void setViews(Integer views) {
         this.views = views;
     }
 
@@ -75,19 +97,27 @@ public class Topic {
         this.updated_at = updated_at;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
-    public String getUser() {
+    public List<Reply> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<Reply> replies) {
+        this.replies = replies;
+    }
+
+    public User getUser() {
         return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
@@ -97,5 +127,27 @@ public class Topic {
 
     public void setNumber_of_replies(Integer number_of_replies) {
         this.number_of_replies = number_of_replies;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Topic topic = (Topic) o;
+        return Objects.equals(id, topic.id) &&
+                Objects.equals(title, topic.title) &&
+                Objects.equals(content, topic.content) &&
+                Objects.equals(views, topic.views) &&
+                Objects.equals(created_at, topic.created_at) &&
+                Objects.equals(updated_at, topic.updated_at) &&
+                Objects.equals(category, topic.category) &&
+                Objects.equals(replies, topic.replies) &&
+                Objects.equals(user, topic.user) &&
+                Objects.equals(number_of_replies, topic.number_of_replies);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, content, views, created_at, updated_at, category, replies, user, number_of_replies);
     }
 }

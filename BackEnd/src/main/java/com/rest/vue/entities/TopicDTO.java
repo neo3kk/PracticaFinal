@@ -1,17 +1,12 @@
 package com.rest.vue.entities;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
-
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 
 public class TopicDTO {
 
-    Integer id;
-    Integer _id;
+    Long id;
+    Long _id;
     String title;
     String content;
     Number views;
@@ -20,21 +15,21 @@ public class TopicDTO {
     String category;
     Integer numberOfReplies;
     List<Reply> replies;
-    User user;
+    UserDTO user;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer get_id() {
+    public Long get_id() {
         return _id;
     }
 
-    public void set_id(Integer _id) {
+    public void set_id(Long _id) {
         this._id = _id;
     }
 
@@ -102,11 +97,28 @@ public class TopicDTO {
         this.replies = replies;
     }
 
-    public User getUser() {
+    public UserDTO getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserDTO user) {
         this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return "TopicDTO{" +
+                "id=" + id +
+                ", _id=" + _id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", views=" + views +
+                ", createdAt='" + createdAt + '\'' +
+                ", updatedAt='" + updatedAt + '\'' +
+                ", category='" + category + '\'' +
+                ", numberOfReplies=" + numberOfReplies +
+                ", replies=" + replies +
+                ", user=" + user +
+                '}';
     }
 }

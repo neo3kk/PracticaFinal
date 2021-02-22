@@ -11,6 +11,7 @@ import com.rest.vue.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +21,7 @@ import java.util.Map;
 
 @RestController
 public class LoginController {
-    Gson gson = new Gson();
+   Gson gson = new Gson();
 
     @Autowired
     LoginService loginService;
@@ -54,6 +55,7 @@ public class LoginController {
     }
 
 
+    @Transactional
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody String payload) {
         Map<String, String> map = gson.fromJson(payload, HashMap.class);
@@ -64,7 +66,7 @@ public class LoginController {
         User user = new User();
         user.setName(name);
         user.setEmail(email);
-        user.setRole(role);
+        user.setRole("admin");
         user.setPassword(password);
         user.setAvatar("");
         user.setRole_permissions("admin");
