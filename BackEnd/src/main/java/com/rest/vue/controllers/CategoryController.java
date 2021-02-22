@@ -167,15 +167,16 @@ public class CategoryController {
         Reply reply = replyService.createReply(slug, map.get("content"));
         reply.setUser(user);
         Reply saved = replyService.save(reply);
-        Topic topic = saved.getTopic();
+        ReplyDTO replyDTO = replyService.makeReplyDTO(saved);
+       /* Topic topic = saved.getTopic();
         topic.setNumber_of_replies(topic.getReplies().toArray().length);
         topicService.updateTopic(topic);
         TopicDTO topicDTO = topicService.makeTopicDTO(topic);
         topicDTO.setNumberOfReplies(topic.getReplies().toArray().length);
         List<ReplyDTO> replyDTOS = replyService.createListReplyDTO(topic.getReplies());
-        topicDTO.setReplies(replyDTOS);
+        topicDTO.setReplies(replyDTOS);*/
 
-        return new ResponseEntity<>(gson.toJson(topicDTO), HttpStatus.OK);
+        return new ResponseEntity<>(gson.toJson(replyDTO), HttpStatus.OK);
     }
 
 

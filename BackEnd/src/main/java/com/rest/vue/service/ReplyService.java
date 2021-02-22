@@ -15,4 +15,6 @@ public interface ReplyService {
     Reply save(Reply reply);
 
     List<ReplyDTO> createListReplyDTO(List<Reply> list);
+
+    ReplyDTO makeReplyDTO(Reply saved);
 }

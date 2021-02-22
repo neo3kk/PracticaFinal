@@ -49,7 +49,8 @@ public class ReplyServiceImpl implements ReplyService {
         return listDTO;
     }
 
-    private ReplyDTO makeReplyDTO(Reply reply) {
+    @Override
+    public ReplyDTO makeReplyDTO(Reply reply) {
         ReplyDTO replyDTO = new ReplyDTO();
         replyDTO.setContent(reply.getContent());
         replyDTO.setCreatedAt(reply.getCreated_at());
