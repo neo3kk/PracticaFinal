@@ -38,10 +38,8 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public List<TopicDTO> createListTopicDTO(List<Topic> list) {
-        System.out.println("CREATE LIST DTO's");
         List<TopicDTO> listDTO = new ArrayList<>();
         list.forEach(topic -> {
-            System.out.println("CREATE LIST DTO's");
             TopicDTO topicDTO = makeTopicDTO(topic);
             listDTO.add(topicDTO);
         });
@@ -64,7 +62,6 @@ public class TopicServiceImpl implements TopicService {
         topicDTO.setUser(user);
         topicDTO.setReplies(null);
         topicDTO.setNumberOfReplies(topic.getNumber_of_replies());
-        System.out.println(topicDTO.toString());
         return topicDTO;
     }
 

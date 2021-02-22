@@ -78,4 +78,22 @@ public class CategoryServiceImpl implements CategoryService {
         return listDTO;
     }
 
+    @Override
+    public Category updateCategory(Category category) {
+        Category category1 = categoryRepository.save(category);
+        return category1;
+    }
+
+    @Override
+    public Boolean removeCategory(Category category) {
+        try {
+            categoryRepository.delete(category);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
 }

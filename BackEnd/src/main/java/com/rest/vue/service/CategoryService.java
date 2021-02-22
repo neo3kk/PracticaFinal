@@ -22,4 +22,8 @@ public interface CategoryService {
     CategoryDTO makeCategoryDTO(Category category);
 
     List<CategoryDTO> createListCategoryDTO(List<Category> list);
+
+    Category updateCategory(Category category);
+
+    Boolean removeCategory(Category category);
 }

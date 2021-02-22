@@ -1,6 +1,8 @@
 package com.rest.vue.entities;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 
 public class TopicDTO {
@@ -14,7 +16,7 @@ public class TopicDTO {
     String updatedAt;
     String category;
     Integer numberOfReplies;
-    List<Reply> replies;
+    List<ReplyDTO> replies;
     UserDTO user;
 
     public Long getId() {
@@ -89,11 +91,11 @@ public class TopicDTO {
         this.numberOfReplies = numberOfReplies;
     }
 
-    public List<Reply> getReplies() {
+    public List<ReplyDTO> getReplies() {
         return replies;
     }
 
-    public void setReplies(List<Reply> replies) {
+    public void setReplies(List<ReplyDTO> replies) {
         this.replies = replies;
     }
 
@@ -106,19 +108,25 @@ public class TopicDTO {
     }
 
     @Override
-    public String toString() {
-        return "TopicDTO{" +
-                "id=" + id +
-                ", _id=" + _id +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", views=" + views +
-                ", createdAt='" + createdAt + '\'' +
-                ", updatedAt='" + updatedAt + '\'' +
-                ", category='" + category + '\'' +
-                ", numberOfReplies=" + numberOfReplies +
-                ", replies=" + replies +
-                ", user=" + user +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TopicDTO topicDTO = (TopicDTO) o;
+        return Objects.equals(id, topicDTO.id) &&
+                Objects.equals(_id, topicDTO._id) &&
+                Objects.equals(title, topicDTO.title) &&
+                Objects.equals(content, topicDTO.content) &&
+                Objects.equals(views, topicDTO.views) &&
+                Objects.equals(createdAt, topicDTO.createdAt) &&
+                Objects.equals(updatedAt, topicDTO.updatedAt) &&
+                Objects.equals(category, topicDTO.category) &&
+                Objects.equals(numberOfReplies, topicDTO.numberOfReplies) &&
+                Objects.equals(replies, topicDTO.replies) &&
+                Objects.equals(user, topicDTO.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, _id, title, content, views, createdAt, updatedAt, category, numberOfReplies, replies, user);
     }
 }
