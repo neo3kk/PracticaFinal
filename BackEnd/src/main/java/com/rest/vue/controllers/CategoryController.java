@@ -163,19 +163,10 @@ public class CategoryController {
         String token = header.replace("Bearer ", "");
         String email = tokenService.getSubject(token);
         User user = userService.findUserByemail(email);
-
         Reply reply = replyService.createReply(slug, map.get("content"));
         reply.setUser(user);
         Reply saved = replyService.save(reply);
         ReplyDTO replyDTO = replyService.makeReplyDTO(saved);
-       /* Topic topic = saved.getTopic();
-        topic.setNumber_of_replies(topic.getReplies().toArray().length);
-        topicService.updateTopic(topic);
-        TopicDTO topicDTO = topicService.makeTopicDTO(topic);
-        topicDTO.setNumberOfReplies(topic.getReplies().toArray().length);
-        List<ReplyDTO> replyDTOS = replyService.createListReplyDTO(topic.getReplies());
-        topicDTO.setReplies(replyDTOS);*/
-
         return new ResponseEntity<>(gson.toJson(replyDTO), HttpStatus.OK);
     }
 
