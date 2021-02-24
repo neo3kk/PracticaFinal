@@ -4,7 +4,6 @@ package com.rest.vue.interceptors;
 import com.rest.vue.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +29,9 @@ public class TokenInterceptor implements HandlerInterceptor {
         }
         String token = header.replace("Bearer ", "");
         try {
+            System.out.println(token);
             String email = tokenService.verifyToken(token);
+            System.out.println(email);
             if(email == null){
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return false;
@@ -41,7 +42,6 @@ public class TokenInterceptor implements HandlerInterceptor {
             e.printStackTrace();
             return false;
         }
-
         return true;
     }
 }

@@ -11,11 +11,5 @@ import java.util.List;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     Category findCategoryBySlug(String slug);
 
-    Category findCategoryByTitle(String title);
-
-/*    @Query("select * from category where color=:color");
-   List<Category> findCategoriesByColor(String color);
-    List<Category> findCategoriesBySlug(String slug);*/
-
 }
 

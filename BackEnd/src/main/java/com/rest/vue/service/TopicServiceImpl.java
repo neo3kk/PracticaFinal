@@ -8,6 +8,7 @@ import com.rest.vue.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,10 +88,29 @@ public class TopicServiceImpl implements TopicService {
             return false;
         }
     }
-    @Override
-    public boolean updateTopic(Topic topic) {
 
-        topicRepository.save(topic);
-        return true;
+    @Override
+    public Topic updateTopic(Topic topic) {
+        Topic t = topicRepository.save(topic);
+        return t;
     }
+
+    @Override
+    public boolean deleteTopic(Long id, HttpServletRequest request) {
+        Topic topic = findById(id);
+        User user = userService.getUerRequest(request);
+        System.out.println(user.getId());
+        System.out.println(topic.getUser().getId());
+        if (topic.getUser().getId().equals(user.getId())) {
+            try {
+                topicRepository.delete(topic);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        return false;
+
+    }
+
 }

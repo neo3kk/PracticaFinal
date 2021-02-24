@@ -5,8 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Service
@@ -17,22 +16,21 @@ public class TokenService {
 
 
     @Value("${token.expiration.time}")
-    String tokenExpirationTime;
+    long tokenExpirationTime;
 
 
     public String newToken(String username) {
-
-        Instant instant = Instant.now().truncatedTo(ChronoUnit.MILLIS);
-
         System.out.println(username);
         String token = JWT.create()
                 .withSubject(username)
-                .withExpiresAt(Date.from(instant))
+                .withExpiresAt(new Date(System.currentTimeMillis() + tokenExpirationTime))
                 .sign(Algorithm.HMAC512(tokenSecret.getBytes()));
         return token;
     }
 
-    public String getSubject(String token) {
+    public String getSubject(HttpServletRequest request) {
+        String header = request.getHeader("authorization");
+        String token = header.replace("Bearer ", "");
         try {
             String subject = JWT.require(Algorithm.HMAC512(tokenSecret.getBytes()))
                     .build()
@@ -47,10 +45,10 @@ public class TokenService {
 
     public String verifyToken(String token) {
         try {
-            String subject = String.valueOf(JWT.require(Algorithm.HMAC512(tokenSecret.getBytes()))
+            String subject = JWT.require(Algorithm.HMAC512(tokenSecret.getBytes()))
                     .build()
                     .verify(token)
-                    .getSubject());
+                    .getSubject();
             System.out.println("Subject: " + subject);
             return subject;
 

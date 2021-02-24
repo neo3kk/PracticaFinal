@@ -4,6 +4,7 @@ package com.rest.vue.controllers;
 import com.google.gson.Gson;
 import com.rest.vue.entities.*;
 import com.rest.vue.service.*;
+import com.rest.vue.utils.utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class CategoryController {
@@ -35,13 +37,36 @@ public class CategoryController {
 
     @GetMapping("/getprofile")
     public ResponseEntity<String> getProfile(HttpServletRequest request) {
-
-        String header = request.getHeader("authorization");
-        String token = header.replace("Bearer ", "");
-        String email = tokenService.getSubject(token);
+        String email = tokenService.getSubject(request);
         User user = userService.findUserByemail(email);
         UserDTO userDTO = userService.makeUserDTO(user);
         return new ResponseEntity<>(gson.toJson(userDTO), HttpStatus.OK);
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<String> putProfile(@RequestBody String payload, HttpServletRequest request) {
+        User user = userService.updateUser(payload, request);
+        UserDTO userDTO = userService.makeUserDTO(user);
+        String token = tokenService.newToken(userDTO.getEmail());
+        Map<String, Object> restMap = new HashMap<>();
+        restMap.put("token", token);
+        restMap.put("user", userDTO);
+        return new ResponseEntity<>(gson.toJson(restMap), HttpStatus.OK);
+    }
+
+    @PutMapping("/profile/password")
+    public ResponseEntity<String> putPassword(@RequestBody String payload, HttpServletRequest request) {
+        Map<String, String> map = gson.fromJson(payload, HashMap.class);
+        String currentPassword = map.get("currentPassword");
+        String newPassword = map.get("newPassword");
+        boolean checkPassword = userService.checkpassword(request, currentPassword);
+        if(checkPassword){
+            userService.updatePassword(newPassword, request);
+            return new ResponseEntity<>("true", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("message:Your courrent password is wrong!", HttpStatus.UNAUTHORIZED);
+
+
     }
 
     @GetMapping("/categories")
@@ -54,20 +79,11 @@ public class CategoryController {
         return new ResponseEntity<>(gson.toJson(categoryDTOS), HttpStatus.OK);
     }
 
-    @Transactional
+
     @PostMapping("/categories")
-    public ResponseEntity<String> postCategories(@RequestBody String payload, HttpServletRequest request) {
-        Map<String, String> map = gson.fromJson(payload, HashMap.class);
-        String header = request.getHeader("authorization");
-        String token = header.replace("Bearer ", "");
-        String email = tokenService.getSubject(token);
-        User user = userService.findUserByemail(email);
-        Category category = new Category();
-        category.setTitle(map.get("title"));
-        category.setDescription(map.get("description"));
-        category.setColor(categoryService.randomColor());
-        Category category1 = categoryService.createCategory(category);
-        category1.setSlug(category1.getId().toString());
+    public ResponseEntity<String> postCategories(@RequestBody String payload) {
+        Category category1 = categoryService.createCategory(payload);
+
         return new ResponseEntity<>(gson.toJson(category1), HttpStatus.OK);
     }
 
@@ -75,24 +91,19 @@ public class CategoryController {
     @GetMapping("categories/{slug}")
     public ResponseEntity<String> getCategory(@PathVariable String slug) {
         Category category = categoryService.findBySlug(slug);
+        System.out.println("SLUG DE LA CATEGORIA: "+slug);
         CategoryDTO categoryDTO = categoryService.makeCategoryDTO(category);
         return new ResponseEntity<>(gson.toJson(categoryDTO), HttpStatus.OK);
     }
 
 
     @PutMapping("categories/{slug}")
-    public ResponseEntity<String> putCategory(@PathVariable String slug, @RequestBody String payload, HttpServletRequest request) {
-        Map<String, String> map = gson.fromJson(payload, HashMap.class);
-        String title = map.get("title");
-        String description = map.get("description");
-        Category category = categoryService.findBySlug(slug);
-        category.setTitle(title);
-        category.setDescription(description);
-        Category updatedCat = categoryService.updateCategory(category);
+    public ResponseEntity<String> putCategory(@PathVariable String slug, @RequestBody String payload) {
+        Category updatedCat = categoryService.updateCategory(slug, payload);
         CategoryDTO categoryDTO = categoryService.makeCategoryDTO(updatedCat);
-
         return new ResponseEntity<>(gson.toJson(categoryDTO), HttpStatus.OK);
     }
+
 
     @DeleteMapping("categories/{slug}")
     public ResponseEntity<String> deleteCategory(@PathVariable String slug) {
@@ -114,10 +125,10 @@ public class CategoryController {
         return new ResponseEntity<>(gson.toJson(listDTO), HttpStatus.OK);
     }
 
-    @GetMapping("topics/{topicParam}")
-    public ResponseEntity<String> getReplies(@PathVariable Long topicParam) {
 
-        Topic topic = topicService.findById(topicParam);
+    @GetMapping("topics/{id}")
+    public ResponseEntity<String> getReplies(@PathVariable Long id) {
+        Topic topic = topicService.findById(id);
         topic.setViews(topic.getViews() + 1);
         topicService.updateTopic(topic);
         TopicDTO topicDTO = topicService.makeTopicDTO(topic);
@@ -127,24 +138,49 @@ public class CategoryController {
     }
 
 
+    @PutMapping("topics/{id}")
+    public ResponseEntity<String> putTopic(@PathVariable Long id, @RequestBody String payload, HttpServletRequest request) {
+        Map<String, String> map = gson.fromJson(payload, HashMap.class);
+        String title = map.get("title");
+        String category = map.get("category");
+        String content = map.get("content");
+        Topic topic = topicService.findById(id);
+        topic.setTitle(title);
+        topic.setContent(content);
+        topic.setCategory(categoryService.findCategory(category));
+        topic.setUpdated_at(utils.getToday());
+        Topic updatedTopic = topicService.updateTopic(topic);
+        TopicDTO topicDTO = topicService.makeTopicDTO(updatedTopic);
+        List<ReplyDTO> replyDTOS = replyService.createListReplyDTO(topic.getReplies());
+        topicDTO.setReplies(replyDTOS);
+        return new ResponseEntity<>(gson.toJson(topicDTO), HttpStatus.OK);
+    }
+
+    @DeleteMapping("topics/{id}")
+    public ResponseEntity<String> deleteTopic(@PathVariable Long id,HttpServletRequest request) {
+        boolean delete = topicService.deleteTopic(id, request);
+        if(delete){
+            return new ResponseEntity<>("true", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("false", HttpStatus.UNAUTHORIZED);
+
+    }
+
+
+
+
     @PostMapping("/topics")
     public ResponseEntity<String> login(@RequestBody String payload, HttpServletRequest request) {
+        User user = userService.getUerRequest(request);
         Map<String, String> map = gson.fromJson(payload, HashMap.class);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = new Date();
-        String header = request.getHeader("authorization");
-        String token = header.replace("Bearer ", "");
-        String email = tokenService.getSubject(token);
-        User user = userService.findUserByemail(email);
-        System.out.println(user.getEmail());
         Topic topic = new Topic();
         topic.setTitle(map.get("title"));
         topic.setContent(map.get("content"));
         topic.setUser(user);
         Category category = categoryService.findBySlug(map.get("category"));
         topic.setCategory(category);
-        topic.setCreated_at(dateFormat.format(date));
-        topic.setUpdated_at(dateFormat.format(date));
+        topic.setCreated_at(utils.getToday());
+        topic.setUpdated_at(utils.getToday());
         topic.setViews(0);
         topic.setNumber_of_replies(0);
         if (topicService.createTopic(topic)) {
@@ -159,15 +195,33 @@ public class CategoryController {
     @PostMapping("topics/{slug}/replies")
     public ResponseEntity<String> postReplies(@PathVariable Long slug, @RequestBody String payload, HttpServletRequest request) {
         Map<String, String> map = gson.fromJson(payload, HashMap.class);
-        String header = request.getHeader("authorization");
-        String token = header.replace("Bearer ", "");
-        String email = tokenService.getSubject(token);
-        User user = userService.findUserByemail(email);
+        User user = userService.getUerRequest(request);
         Reply reply = replyService.createReply(slug, map.get("content"));
         reply.setUser(user);
         Reply saved = replyService.save(reply);
         ReplyDTO replyDTO = replyService.makeReplyDTO(saved);
         return new ResponseEntity<>(gson.toJson(replyDTO), HttpStatus.OK);
+    }
+
+    @PutMapping("topics/{slug}/replies/{id}")
+    public ResponseEntity<String> updateReply(@PathVariable Long id, @RequestBody String payload) {
+        Map<String, String> map = gson.fromJson(payload, HashMap.class);
+
+        Reply reply = replyService.updateReply(id, map.get("content"));
+        ReplyDTO replyDTO = replyService.makeReplyDTO(reply);
+        return new ResponseEntity<>(gson.toJson(replyDTO), HttpStatus.OK);
+    }
+
+    @DeleteMapping("topics/{slug}/replies/{id}")
+    public ResponseEntity<String> deleteReply(@PathVariable Long id, HttpServletRequest request) {
+
+        boolean remove = replyService.deleteReply(id, request);
+        if(remove){
+            return new ResponseEntity<>("true", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("false", HttpStatus.BAD_REQUEST);
+
+
     }
 
 

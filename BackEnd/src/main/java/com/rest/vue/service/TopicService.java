@@ -3,6 +3,7 @@ package com.rest.vue.service;
 import com.rest.vue.entities.Topic;
 import com.rest.vue.entities.TopicDTO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface TopicService {
@@ -17,6 +18,7 @@ public interface TopicService {
     Topic findById(Long topicParam);
 
     boolean createTopic(Topic topic);
-    boolean updateTopic(Topic topic);
+    Topic updateTopic(Topic topic);
 
+    boolean deleteTopic(Long id, HttpServletRequest user);
 }

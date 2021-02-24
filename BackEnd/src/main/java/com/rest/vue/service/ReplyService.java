@@ -1,10 +1,8 @@
 package com.rest.vue.service;
 
-import com.rest.vue.entities.Category;
-import com.rest.vue.entities.CategoryDTO;
-import com.rest.vue.entities.Reply;
-import com.rest.vue.entities.ReplyDTO;
+import com.rest.vue.entities.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface ReplyService {
@@ -17,4 +15,8 @@ public interface ReplyService {
     List<ReplyDTO> createListReplyDTO(List<Reply> list);
 
     ReplyDTO makeReplyDTO(Reply saved);
+
+    Reply updateReply(Long id, String content);
+
+    boolean deleteReply(Long id, HttpServletRequest request);
 }

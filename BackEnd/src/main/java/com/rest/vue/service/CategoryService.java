@@ -11,19 +11,18 @@ public interface CategoryService {
 
     Category findBySlug(String slug);
 
-    Integer randomId();
 
     Category findCategory(String category);
 
     String randomColor();
 
-    Category createCategory(Category category);
+    Category createCategory(String category);
 
     CategoryDTO makeCategoryDTO(Category category);
 
     List<CategoryDTO> createListCategoryDTO(List<Category> list);
 
-    Category updateCategory(Category category);
+    Category updateCategory(String slug, String payload);
 
     Boolean removeCategory(Category category);
 }
