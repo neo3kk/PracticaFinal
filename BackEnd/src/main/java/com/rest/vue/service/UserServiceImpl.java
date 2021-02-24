@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
         String email = map.get("email");
         String name = map.get("name");
         String avatar = map.get("avatar");
-        System.out.println(avatar);
+        //System.out.println(avatar);
         userRequest.setName(name);
         userRequest.setEmail(email);
         User user = userRepository.save(userRequest);

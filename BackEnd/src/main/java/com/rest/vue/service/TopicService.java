@@ -8,8 +8,7 @@ import java.util.List;
 
 public interface TopicService {
 
-
-   List<Topic> findTopicsByCategory(String slug);
+    List<Topic> findTopicsByCategory(String slug);
 
     List<TopicDTO> createListTopicDTO(List<Topic> list);
 
@@ -18,6 +17,7 @@ public interface TopicService {
     Topic findById(Long topicParam);
 
     boolean createTopic(Topic topic);
+
     Topic updateTopic(Topic topic);
 
     boolean deleteTopic(Long id, HttpServletRequest user);

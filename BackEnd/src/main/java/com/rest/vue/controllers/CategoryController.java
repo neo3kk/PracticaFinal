@@ -8,7 +8,6 @@ import com.rest.vue.utils.utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -83,7 +82,6 @@ public class CategoryController {
     @PostMapping("/categories")
     public ResponseEntity<String> postCategories(@RequestBody String payload) {
         Category category1 = categoryService.createCategory(payload);
-
         return new ResponseEntity<>(gson.toJson(category1), HttpStatus.OK);
     }
 
@@ -91,7 +89,6 @@ public class CategoryController {
     @GetMapping("categories/{slug}")
     public ResponseEntity<String> getCategory(@PathVariable String slug) {
         Category category = categoryService.findBySlug(slug);
-        System.out.println("SLUG DE LA CATEGORIA: "+slug);
         CategoryDTO categoryDTO = categoryService.makeCategoryDTO(category);
         return new ResponseEntity<>(gson.toJson(categoryDTO), HttpStatus.OK);
     }
@@ -107,7 +104,6 @@ public class CategoryController {
 
     @DeleteMapping("categories/{slug}")
     public ResponseEntity<String> deleteCategory(@PathVariable String slug) {
-
         Category category = categoryService.findBySlug(slug);
         Boolean remove = categoryService.removeCategory(category);
         if (remove) {
@@ -121,7 +117,6 @@ public class CategoryController {
     public ResponseEntity<String> getTopics(@PathVariable String slug) {
         List<Topic> list = topicService.findTopicsByCategory(slug);
         List<TopicDTO> listDTO = topicService.createListTopicDTO(list);
-
         return new ResponseEntity<>(gson.toJson(listDTO), HttpStatus.OK);
     }
 
@@ -163,7 +158,6 @@ public class CategoryController {
             return new ResponseEntity<>("true", HttpStatus.OK);
         }
         return new ResponseEntity<>("false", HttpStatus.UNAUTHORIZED);
-
     }
 
 
@@ -206,7 +200,6 @@ public class CategoryController {
     @PutMapping("topics/{slug}/replies/{id}")
     public ResponseEntity<String> updateReply(@PathVariable Long id, @RequestBody String payload) {
         Map<String, String> map = gson.fromJson(payload, HashMap.class);
-
         Reply reply = replyService.updateReply(id, map.get("content"));
         ReplyDTO replyDTO = replyService.makeReplyDTO(reply);
         return new ResponseEntity<>(gson.toJson(replyDTO), HttpStatus.OK);
@@ -214,15 +207,10 @@ public class CategoryController {
 
     @DeleteMapping("topics/{slug}/replies/{id}")
     public ResponseEntity<String> deleteReply(@PathVariable Long id, HttpServletRequest request) {
-
         boolean remove = replyService.deleteReply(id, request);
         if(remove){
             return new ResponseEntity<>("true", HttpStatus.OK);
         }
         return new ResponseEntity<>("false", HttpStatus.BAD_REQUEST);
-
-
     }
-
-
 }

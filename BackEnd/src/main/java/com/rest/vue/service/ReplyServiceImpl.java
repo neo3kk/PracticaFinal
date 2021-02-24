@@ -29,10 +29,8 @@ public class ReplyServiceImpl implements ReplyService {
         reply.setContent(content);
         Topic topic = topicService.findById(id);
         reply.setTopic(topic);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = new Date();
-        reply.setCreated_at(dateFormat.format(date));
-        reply.setUpdated_at(dateFormat.format(date));
+        reply.setCreated_at(utils.getToday());
+        reply.setUpdated_at(utils.getToday());
         return reply;
     }
 

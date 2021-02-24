@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface ReplyService {
 
-
     Reply createReply(Long id, String content);
 
     Reply save(Reply reply);

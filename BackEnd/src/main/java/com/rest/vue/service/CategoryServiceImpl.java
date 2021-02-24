@@ -58,7 +58,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDTO makeCategoryDTO(Category category) {
-        System.out.println(category);
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setId(category.getId());
         categoryDTO.set_id(category.getId());

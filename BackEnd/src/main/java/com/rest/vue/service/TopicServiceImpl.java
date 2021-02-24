@@ -19,6 +19,9 @@ public class TopicServiceImpl implements TopicService {
     TopicRepository topicRepository;
 
     @Autowired
+    CategoryService categoryService;
+
+    @Autowired
     UserRepository userRepository;
 
     @Autowired
@@ -54,7 +57,8 @@ public class TopicServiceImpl implements TopicService {
         topicDTO.set_id(topic.getId());
         topicDTO.setId(topic.getId());
         topicDTO.setTitle(topic.getTitle());
-        topicDTO.setCategory(topic.getCategory().getTitle());
+        CategoryDTO categoryDTO = categoryService.makeCategoryDTO(categoryService.findBySlug(topic.getCategory().getSlug()));
+        topicDTO.setCategory(categoryDTO);
         topicDTO.setContent(topic.getContent());
         topicDTO.setCreatedAt(topic.getCreated_at());
         topicDTO.setUpdatedAt(topic.getUpdated_at());
@@ -80,7 +84,6 @@ public class TopicServiceImpl implements TopicService {
                 topicRepository.save(topic);
                 return true;
             } catch (Exception e) {
-                System.out.println("HA FALLAT INSERT");
                 e.printStackTrace();
                 return false;
             }
@@ -99,8 +102,6 @@ public class TopicServiceImpl implements TopicService {
     public boolean deleteTopic(Long id, HttpServletRequest request) {
         Topic topic = findById(id);
         User user = userService.getUerRequest(request);
-        System.out.println(user.getId());
-        System.out.println(topic.getUser().getId());
         if (topic.getUser().getId().equals(user.getId())) {
             try {
                 topicRepository.delete(topic);

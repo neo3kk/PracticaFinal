@@ -20,7 +20,6 @@ public class TokenService {
 
 
     public String newToken(String username) {
-        System.out.println(username);
         String token = JWT.create()
                 .withSubject(username)
                 .withExpiresAt(new Date(System.currentTimeMillis() + tokenExpirationTime))
@@ -49,11 +48,9 @@ public class TokenService {
                     .build()
                     .verify(token)
                     .getSubject();
-            System.out.println("Subject: " + subject);
             return subject;
 
         } catch (Exception e) {
-            System.out.println("TOKEN EXPIRED");
             return null;
         }
     }

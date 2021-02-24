@@ -1,7 +1,6 @@
 package com.rest.vue.entities;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 
@@ -14,7 +13,7 @@ public class TopicDTO {
     Number views;
     String createdAt;
     String updatedAt;
-    String category;
+    CategoryDTO category;
     Integer numberOfReplies;
     List<ReplyDTO> replies;
     UserDTO user;
@@ -75,11 +74,11 @@ public class TopicDTO {
         this.updatedAt = updatedAt;
     }
 
-    public String getCategory() {
+    public CategoryDTO getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(CategoryDTO category) {
         this.category = category;
     }
 

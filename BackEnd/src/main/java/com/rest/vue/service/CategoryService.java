@@ -11,7 +11,6 @@ public interface CategoryService {
 
     Category findBySlug(String slug);
 
-
     Category findCategory(String category);
 
     String randomColor();

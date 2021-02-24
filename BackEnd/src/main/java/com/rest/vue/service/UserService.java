@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface UserService {
 
-
     UserDTO makeUserDTO(User user);
 
     User findUserByemail(String email);
