@@ -16,6 +16,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
+package com.rest.vue.interceptors;
 
     @Autowired
     TokenService tokenService;
