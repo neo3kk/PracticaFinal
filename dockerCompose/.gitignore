@@ -1,3 +1,5 @@
 ./mysql
 ./mysql/**
 ./mysql/*.pem
+./Dockerfile
+./vue2.jar
