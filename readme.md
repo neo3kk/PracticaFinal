@@ -1,14 +1,14 @@
-*Development*
+# Development
 
-Run the startup script
+Run the startup script **startup.sh**
 Open project and run the main class
 Acess to frontend at localhost:8080
-The stop script stop and remove all docker containers
+The **stop.sh** script stops and remove all docker containers
 
-After start production environment, stop development
+After start production environment, stop **development**
 
-*Production*
+# Production
 
 Execute docker-compose up -d and wait.
-Then you can use the app in localhost:8080
+Then you can use the app in **localhost:8080**
 
