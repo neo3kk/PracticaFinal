@@ -2,14 +2,13 @@ package com.rest.vue.service;
 
 import com.google.gson.Gson;
 import com.rest.vue.entities.*;
+import com.rest.vue.repos.ImageRepository;
 import com.rest.vue.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -21,6 +20,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     TokenService tokenService;
 
+    @Autowired
+    ImageRepository imageRepository;
+
 
     @Override
     public UserDTO makeUserDTO(User user) {
@@ -30,11 +32,20 @@ public class UserServiceImpl implements UserService {
         permissions.put("root", string);
         permissions.put("categories", new ArrayList<>());
         userDTO.set_id(user.getId());
+        userDTO.setId(user.getId());
         userDTO.setEmail(user.getEmail());
         userDTO.setName(user.getName());
         userDTO.setRole(user.getRole());
         userDTO.setPassword(user.getPassword());
-        userDTO.setAvatar(user.getAvatar());
+
+        try {
+            byte[] image = imageRepository.findByUserId(user.getId()).getPhoto();
+            userDTO.setAvatarUrl(Arrays.toString(image));
+        } catch (Exception e) {
+            userDTO.setAvatarUrl("");
+        }
+
+
         userDTO.setPermissions(permissions);
         return userDTO;
     }
@@ -63,22 +74,29 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUerRequest(HttpServletRequest request) {
         String email = tokenService.getSubject(request);
-        User user = findUserByemail(email);
-        return user;
+        return findUserByemail(email);
     }
 
     @Override
     public User updateUser(String payload, HttpServletRequest request) {
-        Map<String, String> map = gson.fromJson(payload, HashMap.class);
+        HashMap map = gson.fromJson(payload, HashMap.class);
         User userRequest = userRepository.findById(getUerRequest(request).getId()).get();
-        String email = map.get("email");
-        String name = map.get("name");
-        String avatar = map.get("avatar");
-        //System.out.println(avatar);
+        String email = (String) map.get("email");
+        String name = (String) map.get("name");
+        String avatar = (String) map.get("avatar");
         userRequest.setName(name);
         userRequest.setEmail(email);
-        User user = userRepository.save(userRequest);
-        return user;
+        return userRepository.save(userRequest);
+    }
+
+    private Image updateImage(String avatar, User userRequest) {
+        byte[] byteData = avatar.getBytes();
+        Image image = new Image();
+        image.setPhoto(byteData);
+        image.setUser(userRequest);
+        Image savedImage = imageRepository.save(image);
+        return savedImage;
+
     }
 
     @Override
@@ -92,7 +110,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean checkpassword(HttpServletRequest request, String currentPassword) {
         User user = getUerRequest(request);
-        if(user.getPassword().equals(currentPassword)){
+        if (user.getPassword().equals(currentPassword)) {
             return true;
         }
         return false;

@@ -6,11 +6,11 @@ import java.util.Map;
 public class UserDTO {
 
     Long _id;
-
+    Long id;
     String email;
     String password;
     String name;
-    String avatar;
+    String avatarUrl;
     String role;
     Map<String, Object> permissions;
 
@@ -20,6 +20,14 @@ public class UserDTO {
 
     public void set_id(Long _id) {
         this._id = _id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -46,12 +54,12 @@ public class UserDTO {
         this.name = name;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public String getRole() {
@@ -62,18 +70,6 @@ public class UserDTO {
         this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "_id=" + _id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", avatar='" + avatar + '\'' +
-                ", role='" + role + '\'' +
-                '}';
-    }
-
     public Map<String, Object> getPermissions() {
         return permissions;
     }
@@ -81,4 +77,6 @@ public class UserDTO {
     public void setPermissions(Map<String, Object> permissions) {
         this.permissions = permissions;
     }
+
+
 }

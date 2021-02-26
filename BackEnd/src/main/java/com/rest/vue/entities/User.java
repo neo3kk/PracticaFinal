@@ -29,8 +29,9 @@ public class User {
     @Column(name ="name", columnDefinition = "TEXT")
     String name;
 
-    @Column(name ="avatar", columnDefinition = "TEXT")
-    String avatar;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
+    Image avatar;
 
     @Column(name ="role", columnDefinition = "TEXT")
     String role;
@@ -78,11 +79,11 @@ public class User {
         this.name = name;
     }
 
-    public String getAvatar() {
+    public Image getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(String avatar) {
+    public void setAvatar(Image avatar) {
         this.avatar = avatar;
     }
 

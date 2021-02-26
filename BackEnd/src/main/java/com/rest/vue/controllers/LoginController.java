@@ -68,7 +68,6 @@ public class LoginController {
         user.setEmail(email);
         user.setRole("admin");
         user.setPassword(password);
-        user.setAvatar("");
         user.setRole_permissions("admin");
         if (userService.createUser(user)) {
             Map<String, Object> restMap = new HashMap<>();
