@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+   node:
+      image: node
+      container_name: node
+      working_dir: /app
+      command: npm run serve
+      volumes:
+      - ./:/app
+      expose:
+       - 8080
+      ports:
+       - 8080:8080
