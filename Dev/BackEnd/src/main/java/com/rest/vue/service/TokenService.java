@@ -35,7 +35,11 @@ public class TokenService {
                     .build()
                     .verify(token)
                     .getSubject();
-            return subject;
+            if (subject != null) {
+                return subject;
+            } else {
+               return null;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

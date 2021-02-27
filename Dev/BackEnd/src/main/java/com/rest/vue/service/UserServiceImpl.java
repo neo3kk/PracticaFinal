@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
         userDTO.setPassword(user.getPassword());
 
         try {
-            byte[] image = imageRepository.findByUserId(user.getId()).getPhoto();
+            byte[] image = imageRepository.findImageByUser(user).getPhoto();
             userDTO.setAvatarUrl(Arrays.toString(image));
         } catch (Exception e) {
             userDTO.setAvatarUrl("");
@@ -94,6 +94,15 @@ public class UserServiceImpl implements UserService {
         Image image = new Image();
         image.setPhoto(byteData);
         image.setUser(userRequest);
+        if(userRequest.getAvatar().getId()!=null){
+            System.out.println("DELETE IMAGE");
+            try {
+                System.out.println(imageRepository.findById(userRequest.getAvatar().getId()).get().toString());
+                imageRepository.delete(imageRepository.findById(userRequest.getAvatar().getId()).get());
+            }catch (Exception e){
+                System.out.println("ERROR");
+            }
+        }
         Image savedImage = imageRepository.save(image);
         return savedImage;
 

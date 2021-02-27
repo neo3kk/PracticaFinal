@@ -38,6 +38,9 @@ public class CategoryController {
     public ResponseEntity<String> getProfile(HttpServletRequest request) {
         String email = tokenService.getSubject(request);
         User user = userService.findUserByemail(email);
+        if(user == null){
+            return new ResponseEntity<>("Expired token", HttpStatus.UNAUTHORIZED);
+        }
         UserDTO userDTO = userService.makeUserDTO(user);
         return new ResponseEntity<>(gson.toJson(userDTO), HttpStatus.OK);
     }
